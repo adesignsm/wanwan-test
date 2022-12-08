@@ -1,31 +1,38 @@
-import { Suspense } from "react";
-import { Canvas, useLoader } from "@react-three/fiber";
-import { Environment, OrbitControls } from "@react-three/drei";
-import { useGLTF } from "@react-three/drei";
+import React from "react";
 
-import MODEL from "./assets/models/TorusPurple.glb";
+import { Suspense } from "react";
+import { Canvas } from "@react-three/fiber";
+import { Environment, OrbitControls } from "@react-three/drei";
+import { useGLTF, OrthographicCamera } from "@react-three/drei";
+
+import MODEL from "./assets/models/ToppingBowl.glb";
 import "./assets/scene.css";
 
 const Scene = () => {
-
+    
     const Model = () => {
+
+        //IMPORTANT VARIABLE
         const obj = useGLTF(MODEL);
         console.log(obj);
-        obj.nodes.Plane.visible = false;
+        // obj.nodes.Plane.visible = false;
 
         return (
-            <primitive object={obj.scene} />
+            <>
+                <mesh scale={5} position={[0, 0, 0]}>
+                    <primitive object={obj.scene} />
+                </mesh>
+            </>
         )
     }
 
     return (
         <>
             <Suspense>
-                <Canvas camera={{fov: 75, position: [0, 0, 1]}}>
+                <Canvas frameloop="demand">
+                    <OrthographicCamera />
                     <ambientLight intensity={1.25} />
-                    <mesh scale={5} position={[0, -1, 0]}>
-                        <Model />
-                    </mesh>
+                    <Model />
                     <Environment preset="sunset" />
                     <OrbitControls />
                 </Canvas>
